@@ -16,7 +16,7 @@ injectTapEventPlugin();
 class App extends React.Component {
 	static propTypes = {
 		// store: PropTypes.object.isRequired,
-		routes: PropTypes.object.isRequired,
+		routes: PropTypes.array.isRequired,
 		store: PropTypes.object.isRequired,
 		locale: PropTypes.string.isRequired
 	}

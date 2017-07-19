@@ -5,11 +5,12 @@ import axios from 'axios';
 
 
 export default class HttpRequest {
-	constructor () {
+	constructor() {
 		this.instance = axios.create()
+		this.instance.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded'
 	}
 
-	get (url, params) {
+	get(url, params) {
 		return this.instance.get(url, {
 			params: params
 		})
@@ -21,8 +22,10 @@ export default class HttpRequest {
 			})
 	}
 
-	post (url, params, token) {
-		return this.instance.post(url, params)
+	post(url, params, token = null) {
+		let urlParams = new URLSearchParams();
+		for (let k in params) urlParams.append(k, params[k])
+		return this.instance.post(url, urlParams)
 	}
 
 }

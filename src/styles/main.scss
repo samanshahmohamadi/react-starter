@@ -13,8 +13,8 @@
 // Just remove them if they're not what you want
 @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
 
-$primary-color: #0288D1;
-$secondary-color: #29B6F6;
+$primary-color: #29B6F6;
+$secondary-color: #0288D1;
 @import '~loaders.css/src/animations/ball-scale-multiple.scss';
 
 .loader-hidden {
@@ -170,7 +170,7 @@ a {
   padding-right: 1px;
 }
 .navbar-ver-center {
-  height: 50%;
+  //height: 50%;
 }
 
 .lang-selector > * {

@@ -6,19 +6,28 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-
+import HttpRequest from '../utils/HttpRequest'
+import PropTypes from 'prop-types'
 /**
  * Dialog with action buttons. The actions are passed in as an array of React objects,
  * in this example [FlatButtons](/#/components/flat-button).
  *
  * You can also close this dialog by clicking outside the dialog, or with the 'Esc' key.
  */
-export default class Signin extends React.Component {
+export default class Login extends React.Component {
 	state = {
 		open: false,
 		username: '',
 		password: '',
 		isLogin: false
+	};
+
+	static propTypes = {
+		location: PropTypes.object
+	};
+
+	static contextTypes = {
+		store: PropTypes.any
 	};
 
 	handleOpen = () => {
@@ -29,8 +38,34 @@ export default class Signin extends React.Component {
 		this.setState({open: false});
 	};
 
-	handleSingin = () => {
-		this.props.loginStateChange(true);
+	dispatchLogin = (user) => {
+		return dispatch => {
+			dispatch({
+				type: 'LOGGED_IN',
+				payload: user
+			})
+		}
+	}
+
+	handleLogin = () => {
+		const { store } = this.context
+		new HttpRequest().post("http://localhost:3001/login", {
+			username: this.state.username,
+			password: this.state.password
+		})
+			.then(payload => {
+				localStorage.setItem('isAuth', true)
+				localStorage.setItem('username', payload.data.username)
+				localStorage.setItem('fname', payload.data.fname)
+				localStorage.setItem('lname', payload.data.lname)
+				localStorage.setItem('age', payload.data.age)
+				this.handleClose()
+				store.dispatch(this.dispatchLogin(payload.data))
+			})
+			.catch(err => {
+				alert('Login failed!')
+			})
+		//this.props.loginStateChange(true);
 	};
 
 	usernameChange = (e) => {
@@ -48,24 +83,26 @@ export default class Signin extends React.Component {
 				onTouchTap={this.handleClose}
 			/>,
 			<FlatButton
-				label="Singin"
+				label="Login"
 				primary={true}
 				keyboardFocused={false}
-				onTouchTap={this.handleSingin}
+				onTouchTap={this.handleLogin}
 			/>,
 		];
 
 		return (
 			<div>
-				<RaisedButton label="Dialog" onTouchTap={this.handleOpen}/>
+				<FlatButton labelStyle={{fontWeight: 'bold', color: '#ffffff'}} label="Login"
+				            onTouchTap={this.handleOpen}/>
 				<Dialog
-					title="Sing-in"
+					title="Login"
 					actions={actions}
 					modal={true}
 					open={this.state.open}
 					onRequestClose={this.handleClose}
+					contentStyle={{width: '40%', maxWidth: 'none'}}
 				>
-					<form >
+					<form onSubmit={this.handleLogin}>
 						<div>
 							<TextField
 								value={this.state.username}

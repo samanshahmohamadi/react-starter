@@ -12,11 +12,19 @@ import ru from 'react-intl/locale-data/ru'
 //import './styles/bootstrap.min.css'
 // Store Initialization
 // ------------------------------------
-const store = createStore(window.__INITIAL_STATE__)
+export const store = createStore(window.__INITIAL_STATE__)
 
 // Render Setup
 // ------------------------------------
 const MOUNT_NODE = document.getElementById('root')
+
+const isAuth = localStorage.getItem('isAuth')
+if (isAuth) {
+	store.dispatch({
+		type: 'LOGGED_IN',
+		payload: {}
+	})
+}
 
 let render = () => {
 	const App = require('./components/App').default
